@@ -1,0 +1,56 @@
+_BASE_: [
+  '../datasets/DUO_coco.yml',
+  '../runtime.yml',
+  '../ppyoloe/_base_/ppyoloe_crn.yml',
+  '../ppyoloe/_base_/ppyoloe_reader.yml',
+]
+depth_mult: 0.67
+width_mult: 0.75
+
+log_iter: 1
+snapshot_epoch: 1
+weights: output/ppyoloe_convnext_tiny_36e_coco/model_final
+pretrain_weights: /Data_8TB/Documents/PaddleYOLO/pre_train_model/CSPConvNext_tiny.pdparams
+
+
+YOLOv3:
+  backbone: CSPConvNeXt
+  neck: CustomCSPPAN
+  yolo_head: PPYOLOEHead
+  post_process: ~
+
+CSPConvNeXt:
+  arch: 'mini'
+
+
+
+PPYOLOEHead:
+  static_assigner_epoch: 12
+  nms:
+    nms_top_k: 1000
+    keep_top_k: 300
+    score_threshold: 0.01
+    nms_threshold: 0.7
+
+
+TrainReader:
+  batch_size: 4
+
+
+epoch: 36
+LearningRate:
+  base_lr: 0.0002
+  schedulers:
+  - !PiecewiseDecay
+    gamma: 0.1
+    milestones: [36]
+    use_warmup: false
+
+OptimizerBuilder:
+  regularizer: false
+  optimizer:
+    type: AdamW
+    weight_decay: 0.0005
+
+use_gpu: true
+save_dir: output/ppyoloe_s_cspconvnext_mini_36e_coco

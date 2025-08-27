@@ -1,0 +1,55 @@
+_BASE_: [
+  '../datasets/RUOD_coco.yml',
+  '../runtime.yml',
+  '../yolov10/_base_/yolov10_cspdarknet.yml',
+  '../yolov10/_base_/yolov10_reader.yml',
+]
+depth_mult: 1.0
+width_mult: 1.0
+
+log_iter: 100
+snapshot_epoch: 1
+weights: output/yolov10_m_cspconvnext_tiny_36e_coco/model_final
+pretrain_weights: /Data_8TB/Documents/PaddleYOLO/pre_train_model/CSPConvNext_tiny.pdparams
+save_dir: output/yolov10_m_cspconvnext_tiny
+
+YOLOv10:
+  backbone: CSPConvNeXt
+  neck: YOLOv10CSPPAN
+  yolo_head: YOLOv10Head
+  post_process: ~
+
+CSPConvNeXt:
+  arch: 'tiny'
+
+YOLOv10CSPDarkNet:
+  last_stage_ch: 768
+  use_c2fcib: true
+  use_large_kernel: false
+
+YOLOv10CSPPAN:
+  fpn_use_c2fcib: [false, false]
+  pan_use_c2fcib: [true, true]
+  use_large_kernel: false
+
+TrainReader:
+  batch_size: 4
+
+
+epoch: 36
+LearningRate:
+  base_lr: 0.0002
+  schedulers:
+  - !PiecewiseDecay
+    gamma: 0.1
+    milestones: [36]
+    use_warmup: false
+
+
+OptimizerBuilder:
+  regularizer: false
+  optimizer:
+    type: AdamW
+    weight_decay: 0.0005
+
+save_dir: output/yolov10_m_cspconvnext_tiny
