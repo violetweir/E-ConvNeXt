@@ -14,7 +14,7 @@ tests on object detection tasks further confirm its generalization capability.
 
 
 <div align="center">
-  <img src="images/FLOPs_ACC.png" width="600px" />
+  <img src="Images/FLOPs_ACC.png" width="600px" />
 </div>
 
 # Classification results
