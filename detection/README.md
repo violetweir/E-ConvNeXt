@@ -41,7 +41,7 @@ A sample configuration is shown below:
 
 ```yaml
 metric: COCO
-num_classes: 3
+num_classes: 4
 
 TrainDataset:
   name: COCODataSet
